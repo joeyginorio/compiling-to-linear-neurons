@@ -130,7 +130,8 @@ def compile(tm: Tm, env: Env, batch_size: int) -> Tensor:
         case TmFun(x, ty, tm):
             outs = []
             for b in basis(ty, batch_size):
-                outs.append(compile(tm, {x : b}, batch_size))
+                env.update({x : b})
+                outs.append(compile(tm, env, batch_size))
             return torch.cat(outs, dim=2)
         case TmApp(tm1, tm2):
             v1 = compile(tm1, env, batch_size)
